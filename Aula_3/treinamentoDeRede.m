@@ -1,4 +1,4 @@
-function [accuracy_global] = treinamentoRede(numero_de_neuronios,coeficiente_aprendizagem,conjuntoDeTreino_x,conjuntoDeTreino_y, ...
+function [net,accuracy_global] = treinamentoDeRede(numero_de_neuronios,coeficiente_aprendizagem,conjuntoDeTreino_x,conjuntoDeTreino_y, ...
                                              conjuntoDeTeste_x,conjuntoDeTeste_y,drawOn)
 
     %Treinar a Matriz
@@ -18,14 +18,23 @@ function [accuracy_global] = treinamentoRede(numero_de_neuronios,coeficiente_apr
     
     out = net(conjuntoDeTeste_x);
     
-    if drawOn == 1
-        figure;
-        plotconfusion(conjuntoDeTeste_y,out)
-    end
-
-    out=(out>0.5);
-    digitosErrados = (conjuntoDeTeste_y~=out);
     
 
-    accuracy_global = 100*(sum(digitosErrados)/length(conjuntoDeTeste_x));
+    r = 0;
+
+    for i = 1 : size(out , 2)
+        [~ , c] = max(out(:,i));
+        [~ , e] = max(conjuntoDeTeste_y(: , i));
+        if c == e
+            r = r + 1;
+        end
+    end
+    
+     if drawOn == 1
+         figure;
+         plotconfusion(conjuntoDeTeste_y,out)
+     end
+
+    accuracy_global = (r/size(out,2));
+    
 end
